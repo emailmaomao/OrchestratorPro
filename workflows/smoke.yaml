@@ -1,0 +1,41 @@
+# YOUR FIRST RUN. Safe on any repository.
+#
+#   It creates ONE new markdown file and changes no code, so your test
+#   suite cannot break. If this run goes green, the whole pipeline works:
+#   worktree -> agent -> gate -> commit -> integration branch.
+#
+# Run it with (--repo goes BEFORE the word run):
+#   .\.venv\Scripts\orchestratorpro.exe --repo <PATH TO YOUR PROJECT> run workflows\smoke.yaml
+
+name: smoke-test
+goal: >
+  Prove the pipeline works end to end on this repository, without
+  changing any behaviour.
+max_concurrency: 1
+
+defaults:
+  max_attempts: 1
+  gates: [tests]
+  expects_changes: true
+
+steps:
+  - name: describe
+    title: Write a one-page overview of this project
+    prompt: |
+      Read this repository and create ONE new file:
+      `docs/PROJECT_OVERVIEW.md`.
+
+      It should cover, in plain language:
+        * what this project does, in two or three sentences
+        * the main folders and what each is responsible for
+        * how to install it
+        * how to run its tests
+
+      Rules:
+        * Create ONLY that one file.
+        * Do NOT modify any existing file.
+        * Do NOT change any code, config, or test.
+        * If `docs/` does not exist, create it.
+
+      Keep it under 100 lines. Write for someone who has never seen
+      this codebase before.

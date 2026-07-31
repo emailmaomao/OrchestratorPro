@@ -123,6 +123,91 @@ cd <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro   # e.g. D:\AiPro
 
 ---
 
+## Your first run - start here
+
+### Where the recipes live
+
+A recipe is just a text file. They sit in the `workflows\` folder **inside your
+OrchestratorPro clone**:
+
+```
+<YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\
+    smoke.yaml      <- start with this one
+    example.yaml    <- a fuller example to copy later
+```
+
+Open one and read it:
+
+```powershell
+notepad <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\smoke.yaml
+```
+
+### Run it
+
+**`smoke.yaml` is safe on any project.** It creates one new markdown file and
+changes no code, so your test suite cannot break. If it comes back green, the
+entire machine works - worktree, agent, gate, commit, integration branch.
+
+```powershell
+cd <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro
+.\.venv\Scripts\orchestratorpro.exe --repo <PATH TO THE APP YOU WANT WORKED ON> run workflows\smoke.yaml
+```
+
+You should see something like this:
+
+```
+smoke-test: succeeded
+  run     run_01JABC...
+  steps   1/1 succeeded
+  branch  orchestrator/run_01JABC.../integration
+  review the diff before merging; nothing reached main
+```
+
+### Look at what it made
+
+Copy the `run_...` id from that output and use it here:
+
+```powershell
+cd <PATH TO THE APP YOU WANT WORKED ON>
+git diff main...orchestrator/run_01JABC.../integration
+```
+
+You will see one new file, `docs/PROJECT_OVERVIEW.md`. Nothing else changed.
+
+### Keep it, or throw it away
+
+```powershell
+# keep it
+git merge --no-ff orchestrator/run_01JABC.../integration
+
+# or throw it away - nothing was ever touched on main
+git branch -D orchestrator/run_01JABC.../integration
+```
+
+That is the whole loop. Every future run is the same five moves.
+
+### Making your own recipe
+
+Copy `smoke.yaml`, give it a new name, and change the `prompt:` block to
+describe what you want:
+
+```powershell
+Copy-Item <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\smoke.yaml <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\my-task.yaml
+notepad <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\my-task.yaml
+
+# always check it before running - free and instant
+.\.venv\Scripts\orchestratorpro.exe workflow check workflows\my-task.yaml
+```
+
+Three rules that will save you:
+
+1. **Say what NOT to touch.** Agents wander. `smoke.yaml` says "do NOT modify
+   any existing file" and that is why it is safe.
+2. **Ask for tests in the same step** that writes the code, or the gate has
+   nothing new to check.
+3. **Add a final "wire it in" step** for anything real. A run can pass every
+   test while leaving the new code connected to nothing.
+
 ## Writing a recipe
 
 A recipe is a YAML file. A goal, and a few steps. Steps can wait for each other,
