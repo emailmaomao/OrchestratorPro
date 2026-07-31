@@ -44,8 +44,8 @@ cd OrchestratorPro
 # 3. Install it (creates its own .venv, does not touch your system Python)
 .\scripts\install.ps1
 
-# 4. Prove it installed
-.\.venv\Scripts\orchestratorpro.exe version
+# 4. Prove it installed ('version' is a literal command word, not a placeholder)
+.\.venv\Scripts\orchestratorpro.exe version          # prints: orchestratorpro 1.0.0
 
 # 5. Sign in to Claude Code (no API key needed - uses your subscription)
 claude auth
@@ -207,6 +207,90 @@ Three rules that will save you:
    nothing new to check.
 3. **Add a final "wire it in" step** for anything real. A run can pass every
    test while leaving the new code connected to nothing.
+
+---
+
+## Command reference
+
+Every command starts with the program, then a **command word**. The command
+word is typed literally - it is not something you fill in.
+
+```powershell
+.\.venv\Scripts\orchestratorpro.exe <command word> [options]
+```
+
+So `orchestratorpro.exe version` really is the word `version`. It prints:
+
+```
+orchestratorpro 1.0.0
+```
+
+Anything written like `<PATH TO YOUR PROJECT>` **is** a placeholder - replace
+it, angle brackets and all. Command words like `version`, `run`, and `serve`
+are never placeholders.
+
+### The command words
+
+| Command | What it does | You will use it |
+|---|---|---|
+| `version` | Prints the version and exits. Proves the install worked. | Once, after installing |
+| `config check` | Validates your settings and reports anything unsafe. | After editing `config.toml` |
+| `config show` | Prints every setting actually in effect, as JSON. | When something behaves oddly |
+| `workflow check <file>` | Validates a recipe without running it. Free and instant. | Before every run |
+| `run <file>` | **The main one.** Executes a recipe to completion and stops. | Every time you want work done |
+| `serve` | Starts the dashboard and REST API. Runs until you close the window. | When you want a web UI |
+| `retention plan` | Shows which old runs would be archived. | Occasionally, for housekeeping |
+| `retention apply <dir>` | Archives and prunes old runs. | Occasionally |
+| `backup create <dir>` | Snapshots the run database. | Before upgrading |
+| `auth bootstrap` | Creates the first admin account, locking down the API. | Only if you expose `serve` |
+| `bench` | Runs the performance benchmarks. | Rarely |
+
+### Options that go BEFORE the command word
+
+These are global. Putting them after the command word gives you
+`unrecognized arguments`.
+
+| Option | Meaning |
+|---|---|
+| `--repo <path>` | **The important one.** The project to work on. Without it, `run` refuses. |
+| `--json` | Machine-readable output, for scripting |
+| `--log-level debug` | Show what it is actually doing |
+| `--database <path>` | Use a different run database |
+| `--config <path>` | Use a different settings file |
+
+```powershell
+# correct
+.\.venv\Scripts\orchestratorpro.exe --repo C:\proj run workflows\smoke.yaml
+
+# WRONG - --repo after the command word
+.\.venv\Scripts\orchestratorpro.exe run --repo C:\proj workflows\smoke.yaml
+```
+
+### Options that go AFTER `run`
+
+| Option | Meaning |
+|---|---|
+| `--workspace <path>` | Where worktrees get created |
+| `--max-concurrency <n>` | How many steps may run at once |
+| `--allow-unverified` | Run without a repo, where nothing is gated or committed. Rarely what you want. |
+
+### What the exit codes mean
+
+| Code | Meaning |
+|---|---|
+| `0` | Every step succeeded |
+| `1` | Something failed |
+| `2` | The command was typed wrong |
+| `3` | Refused as unsafe - the message names the setting |
+
+Check the last one in PowerShell with `echo $LASTEXITCODE`.
+
+### Stuck? Ask the tool
+
+```powershell
+.\.venv\Scripts\orchestratorpro.exe --help
+.\.venv\Scripts\orchestratorpro.exe run --help
+```
 
 ## Writing a recipe
 

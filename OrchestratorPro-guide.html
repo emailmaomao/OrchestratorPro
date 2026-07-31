@@ -360,6 +360,52 @@
 
     
 
+
+    <h3>Command words versus placeholders</h3>
+    <p>This trips everyone up once. Every invocation is the program, then a <strong>command word</strong>:</p>
+    <pre class="cmd"><span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe &lt;command word&gt; [options]</pre>
+    <p>Command words — <code>version</code>, <code>run</code>, <code>serve</code>, <code>config</code> — are typed <strong>literally</strong>. They are never something you fill in. So <code>orchestratorpro.exe version</code> really is the word <em>version</em>, and it prints:</p>
+    <pre class="cmd">orchestratorpro 1.0.0</pre>
+    <p>Anything in angle brackets, like <code>&lt;PATH TO YOUR PROJECT&gt;</code>, <em>is</em> a placeholder — replace it, brackets and all.</p>
+
+    <table class="where">
+      <tr><th>Command</th><th>What it does</th><th>When</th></tr>
+      <tr><td class="mono">version</td><td>Prints the version. Proves the install worked.</td><td>Once, after installing</td></tr>
+      <tr><td class="mono">config check</td><td>Validates settings, reports anything unsafe.</td><td>After editing config.toml</td></tr>
+      <tr><td class="mono">config show</td><td>Every setting actually in effect, as JSON.</td><td>When something behaves oddly</td></tr>
+      <tr><td class="mono">workflow check &lt;file&gt;</td><td>Validates a recipe without running it.</td><td>Before every run</td></tr>
+      <tr><td class="mono">run &lt;file&gt;</td><td><strong>The main one.</strong> Executes a recipe, then stops.</td><td>Every time you want work done</td></tr>
+      <tr><td class="mono">serve</td><td>Dashboard and REST API. Lives until you close the window.</td><td>When you want a web UI</td></tr>
+      <tr><td class="mono">retention plan / apply</td><td>Archives and prunes old runs.</td><td>Housekeeping</td></tr>
+      <tr><td class="mono">backup create &lt;dir&gt;</td><td>Snapshots the run database.</td><td>Before upgrading</td></tr>
+      <tr><td class="mono">auth bootstrap</td><td>Creates the first admin, locking down the API.</td><td>Only if you expose serve</td></tr>
+      <tr><td class="mono">bench</td><td>Performance benchmarks.</td><td>Rarely</td></tr>
+    </table>
+
+    <h3>Where the options go</h3>
+    <p><strong>Before</strong> the command word (these are global):</p>
+    <table class="where">
+      <tr><th>Option</th><th>Meaning</th></tr>
+      <tr><td class="mono">--repo &lt;path&gt;</td><td>The project to work on. Without it, <code>run</code> refuses.</td></tr>
+      <tr><td class="mono">--json</td><td>Machine-readable output, for scripting</td></tr>
+      <tr><td class="mono">--log-level debug</td><td>Show what it is actually doing</td></tr>
+      <tr><td class="mono">--database &lt;path&gt;</td><td>Use a different run database</td></tr>
+      <tr><td class="mono">--config &lt;path&gt;</td><td>Use a different settings file</td></tr>
+    </table>
+    <p><strong>After</strong> <code>run</code>:</p>
+    <table class="where">
+      <tr><th>Option</th><th>Meaning</th></tr>
+      <tr><td class="mono">--workspace &lt;path&gt;</td><td>Where worktrees get created</td></tr>
+      <tr><td class="mono">--max-concurrency &lt;n&gt;</td><td>How many steps may run at once</td></tr>
+      <tr><td class="mono">--allow-unverified</td><td>Run with nothing gated or committed. Rarely what you want.</td></tr>
+    </table>
+    <pre class="cmd"><span class="c"># correct</span>
+<span class="p">PS&gt;</span> orchestratorpro.exe --repo C:\proj run workflows\smoke.yaml
+
+<span class="c"># WRONG - --repo after the command word</span>
+<span class="p">PS&gt;</span> orchestratorpro.exe run --repo C:\proj workflows\smoke.yaml</pre>
+    <p>And when stuck, ask the tool: <code>--help</code> works on the program and on every command word.</p>
+
     <h3>What a new project needs before it can be driven</h3>
     <p>All five, or the engine is either useless or unsafe on it:</p>
     <ol class="check">
@@ -381,14 +427,14 @@
 <span class="p">PS&gt;</span> git clone https://github.com/emailmaomao/OrchestratorPro.git
 <span class="p">PS&gt;</span> cd OrchestratorPro
 <span class="p">PS&gt;</span> .\scripts\install.ps1
-<span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe version</pre>
+<span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe version   <span class="c"># prints: orchestratorpro 1.0.0</span></pre>
     <p class="oslabel">Sample — real values filled in</p>
     <pre class="cmd"><span class="p">PS&gt;</span> mkdir D:\AiProject
 <span class="p">PS&gt;</span> cd    D:\AiProject
 <span class="p">PS&gt;</span> git clone https://github.com/emailmaomao/OrchestratorPro.git
 <span class="p">PS&gt;</span> cd OrchestratorPro
 <span class="p">PS&gt;</span> .\scripts\install.ps1
-<span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe version</pre>
+<span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe version   <span class="c"># prints: orchestratorpro 1.0.0</span></pre>
 
     <p class="oslabel">macOS / Linux</p>
     <pre class="cmd"><span class="p">$</span> mkdir -p ~/&lt;Your Code FolderName&gt;
