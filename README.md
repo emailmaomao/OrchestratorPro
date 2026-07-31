@@ -125,13 +125,17 @@ cd <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro   # e.g. D:\AiPro
 
 ## Your first run - start here
 
+> Paths below are examples. `D:\AiProjects\OrchestratorPro` is wherever you
+> cloned this, and `D:\AiProjects\MyNewApp01` is whatever project you want
+> worked on. Swap in your own.
+
 ### Where the recipes live
 
 A recipe is just a text file. They sit in the `workflows\` folder **inside your
 OrchestratorPro clone**:
 
 ```
-<YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\
+D:\AiProjects\OrchestratorPro\workflows\
     smoke.yaml      <- start with this one
     example.yaml    <- a fuller example to copy later
 ```
@@ -139,7 +143,7 @@ OrchestratorPro clone**:
 Open one and read it:
 
 ```powershell
-notepad <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\smoke.yaml
+notepad D:\AiProjects\OrchestratorPro\workflows\smoke.yaml
 ```
 
 ### Run it
@@ -149,8 +153,8 @@ changes no code, so your test suite cannot break. If it comes back green, the
 entire machine works - worktree, agent, gate, commit, integration branch.
 
 ```powershell
-cd <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro
-.\.venv\Scripts\orchestratorpro.exe --repo <PATH TO THE APP YOU WANT WORKED ON> run workflows\smoke.yaml
+cd D:\AiProjects\OrchestratorPro
+.\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\MyNewApp01 run workflows\smoke.yaml
 ```
 
 You should see something like this:
@@ -168,7 +172,7 @@ smoke-test: succeeded
 Copy the `run_...` id from that output and use it here:
 
 ```powershell
-cd <PATH TO THE APP YOU WANT WORKED ON>
+cd D:\AiProjects\MyNewApp01
 git diff main...orchestrator/run_01JABC.../integration
 ```
 
@@ -192,8 +196,8 @@ Copy `smoke.yaml`, give it a new name, and change the `prompt:` block to
 describe what you want:
 
 ```powershell
-Copy-Item <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\smoke.yaml <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\my-task.yaml
-notepad <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\my-task.yaml
+Copy-Item D:\AiProjects\OrchestratorPro\workflows\smoke.yaml D:\AiProjects\OrchestratorPro\workflows\my-task.yaml
+notepad D:\AiProjects\OrchestratorPro\workflows\my-task.yaml
 
 # always check it before running - free and instant
 .\.venv\Scripts\orchestratorpro.exe workflow check workflows\my-task.yaml
@@ -225,7 +229,7 @@ So `orchestratorpro.exe version` really is the word `version`. It prints:
 orchestratorpro 1.0.0
 ```
 
-Anything written like `<PATH TO YOUR PROJECT>` **is** a placeholder - replace
+Anything written like `D:\AiProjects\MyNewApp01` **is** a placeholder - replace
 it, angle brackets and all. Command words like `version`, `run`, and `serve`
 are never placeholders.
 
@@ -251,16 +255,16 @@ The path is relative to wherever you currently are, which is why every example
 has you `cd` into the clone first. Spelled out in full it is the same command:
 
 ```powershell
-.\.venv\Scripts\orchestratorpro.exe workflow check <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\example.yaml
+.\.venv\Scripts\orchestratorpro.exe workflow check D:\AiProjects\OrchestratorPro\workflows\example.yaml
 ```
 
 Same idea for the main one - `run` is the action, the rest is a real path:
 
 ```
-orchestratorpro.exe   --repo <PATH TO YOUR PROJECT>   run   workflows\smoke.yaml
-|                     |                     |     |
-program               which project to      |     which recipe to follow
-                      work on               action
+orchestratorpro.exe   --repo D:\AiProjects\MyNewApp01   run   workflows\smoke.yaml
+|                     |                              |     |
+program               which project to work on       |     which recipe to follow
+                                                     action
 ```
 
 ### The command words
@@ -396,7 +400,7 @@ extract-tag-service: succeeded
 Review and adopt it yourself:
 
 ```powershell
-cd <PATH TO THE APP YOU WANT WORKED ON>
+cd D:\AiProjects\MyNewApp01
 git diff main...orchestrator/<run-id>/integration
 git merge --no-ff orchestrator/<run-id>/integration
 ```
@@ -447,7 +451,7 @@ Same pipeline, with a dashboard, live progress, an approval queue, and a REST
 API other systems can drive:
 
 ```powershell
-.\.venv\Scripts\orchestratorpro.exe --repo <PATH TO THE APP YOU WANT WORKED ON> serve
+.\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\MyNewApp01 serve
 ```
 
 Dashboard at <http://127.0.0.1:8765/ui/>. The bind is loopback-only and refuses

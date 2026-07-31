@@ -380,7 +380,7 @@ the program                           command           a real file path
       <li><p class="term">workflows\example.yaml<span>plural</span></p><p class="def">An actual path — the <code>workflows</code> folder inside your clone, and the file inside it. Relative to wherever you currently are, which is why every example has you <code>cd</code> into the clone first.</p></li>
     </ul>
     <p>Same idea for the main one — <code>run</code> is the action, the rest is a real path:</p>
-    <pre class="cmd">orchestratorpro.exe   --repo &lt;your project&gt;   run   workflows\smoke.yaml
+    <pre class="cmd">orchestratorpro.exe   --repo D:\AiProjects\MyNewApp01   run   workflows\smoke.yaml
 <span class="c">|                     |                       |     |
 program               which project to        |     which recipe to follow
                       work on                 action</span></pre>
@@ -520,7 +520,7 @@ steps:
     <h3>Step 5 — run it</h3>
     <p>One command. <code>--repo</code> is a <em>global</em> option, so it goes <strong>before</strong> the word <code>run</code> — putting it after gives you <code>unrecognized arguments: --repo</code>.</p>
     <p class="oslabel">Windows</p>
-    <pre class="cmd"><span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe --repo &lt;PATH TO THE APP YOU WANT WORKED ON&gt; run workflows\example.yaml</pre>
+    <pre class="cmd"><span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\MyNewApp01 run workflows\example.yaml</pre>
     <p class="oslabel">macOS / Linux</p>
     <pre class="cmd"><span class="p">$</span> .venv/bin/orchestratorpro --repo ~/code/their-project run workflows/example.yaml</pre>
     <pre class="cmd">extract-tag-service: succeeded
@@ -531,14 +531,14 @@ steps:
     <p>Exit codes are the contract: <code>0</code> every step succeeded, <code>1</code> something didn't, <code>2</code> bad invocation, <code>3</code> refused as unsafe. Without <code>--repo</code> it refuses outright rather than producing unverified work.</p>
 
     <h3>Step 6 — review and adopt</h3>
-    <pre class="cmd"><span class="p">PS&gt;</span> cd &lt;PATH TO THE APP YOU WANT WORKED ON&gt;
+    <pre class="cmd"><span class="p">PS&gt;</span> cd D:\AiProjects\MyNewApp01
 <span class="p">PS&gt;</span> git diff main...orchestrator/&lt;run-id&gt;/integration
 <span class="p">PS&gt;</span> git merge --no-ff orchestrator/&lt;run-id&gt;/integration</pre>
     <p>The engine stops before this. Always.</p>
 
     <h3>Or use the server</h3>
     <p>Same pipeline, plus a dashboard, live progress, an approval queue, and a REST API:</p>
-    <pre class="cmd"><span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe --repo &lt;PATH TO THE APP&gt; serve
+    <pre class="cmd"><span class="p">PS&gt;</span> .\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\MyNewApp01 serve
 <span class="c"># dashboard: http://127.0.0.1:8765/ui/</span></pre>
 
     <h3>One-time versus every-time</h3>
