@@ -65,9 +65,9 @@ cd OrchestratorPro
 claude auth
 ```
 
-Add `-Dev` to `install.ps1` **only** if you intend to work on OrchestratorPro
-itself - it pulls in pytest, ruff, and mypy, which you do not need just to use
-the tool. Skip `claude auth` if you are already signed in.
+Skip `claude auth` if you are already signed in. If you want to work *on*
+OrchestratorPro rather than with it, see
+[`docs/130_DEVELOPER_GUIDE.md`](docs/130_DEVELOPER_GUIDE.md).
 
 Then create **`C:\Users\<you>\.orchestratorpro\config.toml`** with this in it:
 
