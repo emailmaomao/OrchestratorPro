@@ -1,0 +1,99 @@
+# OrchestratorPro — a single-node deployment.
+#
+#   cp .env.example .env      # then read it; the defaults are deliberate
+#   docker compose up -d
+#   open http://127.0.0.1:8765/ui/
+#
+# The port is published on the loopback interface only. This build ships no
+# authentication, so binding it to 0.0.0.0 puts an unauthenticated service that
+# executes commands on whatever network the host is attached to. If you need it
+# reachable, put an authenticating proxy in front and point that at this.
+
+services:
+  orchestratorpro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: orchestratorpro:1.0.0
+    container_name: orchestratorpro
+    restart: unless-stopped
+
+    env_file:
+      - path: .env
+        required: false
+
+    environment:
+      # Inside the container the server binds to all interfaces; the *published*
+      # port below is what decides who can reach it. Binding to 127.0.0.1 here
+      # would make it unreachable even from the host.
+      ORCHESTRATORPRO__API__HOST: 0.0.0.0
+      ORCHESTRATORPRO__API__PORT: "8765"
+      ORCHESTRATORPRO__SECURITY__ALLOWED_HOSTS: "${ORCHESTRATORPRO_ALLOWED_HOSTS:-localhost,127.0.0.1}"
+      ORCHESTRATORPRO__SECURITY__RATE_LIMIT_PER_MINUTE: "${ORCHESTRATORPRO_RATE_LIMIT:-600}"
+      ORCHESTRATORPRO__API__AUTH_TOKEN_ENV: "${ORCHESTRATORPRO_AUTH_TOKEN_ENV:-ORCHESTRATORPRO_TOKEN}"
+
+    ports:
+      # host:container — loopback only, on purpose. Change the host side to
+      # 0.0.0.0 only behind something that authenticates.
+      - "127.0.0.1:${ORCHESTRATORPRO_PORT:-8765}:8765"
+
+    volumes:
+      # The event log. Losing this loses every run that ever happened.
+      - orchestratorpro-state:/var/lib/orchestratorpro
+      # The repositories agents work in. Read-write by necessity: the whole
+      # point is that they change code.
+      - "${ORCHESTRATORPRO_WORKSPACE:-./workspace}:/workspace"
+
+    # Hardening the runtime, not just the application.
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=4).status==200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    stop_grace_period: 30s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # A nightly snapshot of the event log, kept for a week.
+  #
+  #   docker compose --profile backup run --rm backup
+  #
+  # Deliberately a profile rather than a running service: a backup container
+  # that idles in a loop is one more thing to keep alive, and the host already
+  # has a scheduler.
+  backup:
+    image: orchestratorpro:1.0.0
+    profiles: ["backup"]
+    depends_on:
+      - orchestratorpro
+    volumes:
+      - orchestratorpro-state:/var/lib/orchestratorpro
+      - "${ORCHESTRATORPRO_BACKUPS:-./backups}:/backups"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        orchestratorpro --database /var/lib/orchestratorpro/runs.db
+        backup create /backups --label nightly &&
+        orchestratorpro backup prune /backups --keep 7 --yes
+
+volumes:
+  orchestratorpro-state:
+    driver: local

@@ -1,0 +1,32 @@
+# A worked example. Copy it, change the prompts, run:
+#   orchestratorpro --repo /path/to/your-project run workflows/example.yaml
+name: extract-tag-service
+goal: >
+  Move tag filtering out of the UI layer into a service that can be
+  unit-tested without constructing a widget.
+max_concurrency: 1
+
+defaults:
+  max_attempts: 2
+  gates: [tests]
+  expects_changes: true
+
+steps:
+  - name: extract
+    title: services/tag_filter.py - the logic, without the widget
+    prompt: |
+      Create `src/services/tag_filter.py` holding the filtering logic
+      currently inside `src/ui/tag_panel.py`. It must import nothing from
+      the UI framework. Behaviour must be identical.
+
+      Add `tests/test_tag_filter.py` covering the empty-selection case and
+      the multi-tag intersection case.
+
+      Do NOT change the public API of TagPanel.
+
+  - name: wire
+    title: Route every caller through the new service
+    depends_on: [extract]
+    prompt: |
+      Update every caller in `src/` to use the new service, and verify no
+      import of the old code path remains anywhere.

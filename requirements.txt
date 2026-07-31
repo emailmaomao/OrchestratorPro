@@ -1,0 +1,29 @@
+# OrchestratorPro dependencies.
+#
+# The domain layers import almost nothing outside the standard library: PyYAML
+# is the single exception, used by orchestrator/planner/ to read workflow files.
+# The web stack is reachable only from orchestrator/api/ and
+# orchestrator/dashboard/, and an import-layering test keeps it that way.
+#
+#   python -m venv .venv
+#   .venv\Scripts\python -m pip install -r requirements.txt
+#   .venv\Scripts\python -m pytest -q
+
+# --- runtime -----------------------------------------------------------------
+fastapi==0.140.0
+uvicorn==0.51.0
+pydantic==2.13.4
+pyyaml==6.0.3          # the planner reads YAML workflow files
+
+# --- tests -------------------------------------------------------------------
+pytest==9.1.1
+pytest-cov==7.1.0
+httpx==0.28.1          # required by fastapi.testclient
+
+# --- security ----------------------------------------------------------------
+# Run against this file, not the environment: what ships is what is pinned
+# here. SECURITY.md and the definition of done in CLAUDE.md both point at it.
+#
+#   .venv\Scripts\python -m pip_audit -r requirements.txt
+pip-audit==2.10.1
+

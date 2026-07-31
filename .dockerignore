@@ -1,0 +1,42 @@
+# Keep the build context small and free of anything that should not travel.
+#
+# The first two entries are the ones that matter: a .env in the context ends up
+# in an image layer, and a .git directory carries every secret anybody has ever
+# committed and then removed.
+
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+
+.venv
+venv
+env
+__pycache__
+*.py[cod]
+*.egg-info
+build
+dist
+
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.coverage
+.coverage.*
+htmlcov
+coverage.xml
+
+tests
+docs
+scripts
+backups
+workspace
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+
+.idea
+.vscode
+.DS_Store

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="__BASE__" />
+    <title>OrchestratorPro</title>
+    <!--
+      Nothing here is loaded from anywhere but this origin. An operator running
+      OrchestratorPro on a machine with no internet access gets the whole UI.
+    -->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>◆</text></svg>"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        <span class="brand-name">OrchestratorPro</span>
+      </div>
+      <nav class="nav" aria-label="Sections">
+        <a data-route="runs" href="runs">Runs</a>
+        <a data-route="workflows" href="workflows">Workflows</a>
+        <a data-route="agents" href="agents">Agents</a>
+        <a data-route="builds" href="builds">Builds</a>
+        <a data-route="events" href="events">Events</a>
+        <a data-route="metrics" href="metrics">Metrics</a>
+        <a data-route="config" href="config">Config</a>
+        <a data-route="status" href="status">Status</a>
+      </nav>
+      <div class="health" id="health-pill" role="status" aria-live="polite">
+        <span class="dot" data-state="unknown" aria-hidden="true"></span>
+        <span class="health-text">connecting…</span>
+      </div>
+    </header>
+
+    <main id="main" class="main" tabindex="-1">
+      <noscript>
+        <p class="notice">
+          The dashboard is a client of the OrchestratorPro API and needs
+          JavaScript. Everything it shows is available directly from the API —
+          start with <code>/health</code>, <code>/runs</code>, and
+          <code>/openapi.json</code>.
+        </p>
+      </noscript>
+      <div id="view" class="view" aria-busy="true"></div>
+    </main>
+
+    <footer class="footer">
+      <span id="footer-note">Reads replay the event log. Writes append to it.</span>
+    </footer>
+
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>
