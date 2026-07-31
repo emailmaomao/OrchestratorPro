@@ -229,9 +229,9 @@ So `orchestratorpro.exe version` really is the word `version`. It prints:
 orchestratorpro 1.0.0
 ```
 
-Anything written like `D:\AiProjects\MyNewApp01` **is** a placeholder - replace
-it, angle brackets and all. Command words like `version`, `run`, and `serve`
-are never placeholders.
+Paths like `D:\AiProjects\MyNewApp01` are **examples** - swap in your own folder.
+Command words like `version`, `run`, and `serve` are never examples: type them
+exactly as written.
 
 ### Anatomy of a command
 
