@@ -229,6 +229,40 @@ Anything written like `<PATH TO YOUR PROJECT>` **is** a placeholder - replace
 it, angle brackets and all. Command words like `version`, `run`, and `serve`
 are never placeholders.
 
+### Anatomy of a command
+
+Commands read left to right in three parts. This one confuses everybody the
+first time, because `workflow` and `workflows` are almost the same word doing
+completely different jobs:
+
+```
+.\.venv\Scripts\orchestratorpro.exe   workflow check   workflows\example.yaml
+|                                     |                |
+the program                           command           a real file path
+                                      (group + action)  (folder\file on disk)
+```
+
+* **`workflow`** (singular) is a command group, like `config` or `backup`.
+* **`check`** is its action. Together they mean "validate a recipe file".
+* **`workflows\example.yaml`** (plural) is an actual path - the `workflows`
+  folder inside your OrchestratorPro clone, and the file inside it.
+
+The path is relative to wherever you currently are, which is why every example
+has you `cd` into the clone first. Spelled out in full it is the same command:
+
+```powershell
+.\.venv\Scripts\orchestratorpro.exe workflow check <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro\workflows\example.yaml
+```
+
+Same idea for the main one - `run` is the action, the rest is a real path:
+
+```
+orchestratorpro.exe   --repo <PATH TO YOUR PROJECT>   run   workflows\smoke.yaml
+|                     |                     |     |
+program               which project to      |     which recipe to follow
+                      work on               action
+```
+
 ### The command words
 
 | Command | What it does | You will use it |

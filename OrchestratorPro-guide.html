@@ -368,6 +368,23 @@
     <pre class="cmd">orchestratorpro 1.0.0</pre>
     <p>Anything in angle brackets, like <code>&lt;PATH TO YOUR PROJECT&gt;</code>, <em>is</em> a placeholder — replace it, brackets and all.</p>
 
+    <h3>Anatomy of a command</h3>
+    <p>Commands read left to right in three parts. This one confuses everybody the first time, because <code>workflow</code> and <code>workflows</code> are almost the same word doing completely different jobs:</p>
+    <pre class="cmd">.\.venv\Scripts\orchestratorpro.exe   workflow check   workflows\example.yaml
+<span class="c">|                                     |                |
+the program                           command           a real file path
+                                      (group + action)  (folder\file on disk)</span></pre>
+    <ul class="decoder">
+      <li><p class="term">workflow<span>singular</span></p><p class="def">A command group, like <code>config</code> or <code>backup</code>.</p></li>
+      <li><p class="term">check<span>the action</span></p><p class="def">Together they mean "validate a recipe file".</p></li>
+      <li><p class="term">workflows\example.yaml<span>plural</span></p><p class="def">An actual path — the <code>workflows</code> folder inside your clone, and the file inside it. Relative to wherever you currently are, which is why every example has you <code>cd</code> into the clone first.</p></li>
+    </ul>
+    <p>Same idea for the main one — <code>run</code> is the action, the rest is a real path:</p>
+    <pre class="cmd">orchestratorpro.exe   --repo &lt;your project&gt;   run   workflows\smoke.yaml
+<span class="c">|                     |                       |     |
+program               which project to        |     which recipe to follow
+                      work on                 action</span></pre>
+
     <table class="where">
       <tr><th>Command</th><th>What it does</th><th>When</th></tr>
       <tr><td class="mono">version</td><td>Prints the version. Proves the install worked.</td><td>Once, after installing</td></tr>
