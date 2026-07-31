@@ -148,7 +148,7 @@ export ORCHESTRATORPRO__PROVIDER__OPENAI_COMPAT__MODEL=llama3.1:70b
 export ORCHESTRATORPRO__PROVIDER__HERMES__MODEL=...
 
 # or the Claude Code CLI, subscription-billed — no API key anywhere.
-# Requires `claude` on PATH and an active `claude /login` session; the
+# Requires `claude` on PATH and an active `claude auth` session; the
 # agent's model comes from [agent] model (below), not from this block.
 export ORCHESTRATORPRO__PROVIDER__CLAUDE_CLI__EXECUTABLE=claude
 ```

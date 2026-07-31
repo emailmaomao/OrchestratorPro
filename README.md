@@ -33,20 +33,41 @@ family castle.
 ### Part 1 — once per computer, then never again
 
 ```powershell
-# 1. Get the code
-cd C:\code
+# 1. Make a folder to work in, and go into it
+mkdir <YOUR DRIVE LETTER>:\<Your Code FolderName>   # only if the folder does not exist yet
+cd    <YOUR DRIVE LETTER>:\<Your Code FolderName>   # change directory into your local folder
+
+# 2. Get the code
 git clone https://github.com/emailmaomao/OrchestratorPro.git
 cd OrchestratorPro
 
-# 2. Install it (creates its own .venv, does not touch your system Python)
-.\scripts\install.ps1 -Dev
+# 3. Install it (creates its own .venv, does not touch your system Python)
+.\scripts\install.ps1
 
-# 3. Prove it installed
+# 4. Prove it installed
 .\.venv\Scripts\orchestratorpro.exe version
 
-# 4. Log in to Claude Code (no API key needed - uses your subscription)
-claude /login
+# 5. Sign in to Claude Code (no API key needed - uses your subscription)
+claude auth
 ```
+
+**Sample**, with real values filled in:
+
+```powershell
+mkdir D:\AiProject
+cd    D:\AiProject
+
+git clone https://github.com/emailmaomao/OrchestratorPro.git
+cd OrchestratorPro
+
+.\scripts\install.ps1
+.\.venv\Scripts\orchestratorpro.exe version
+claude auth
+```
+
+Add `-Dev` to `install.ps1` **only** if you intend to work on OrchestratorPro
+itself - it pulls in pytest, ruff, and mypy, which you do not need just to use
+the tool. Skip `claude auth` if you are already signed in.
 
 Then create **`C:\Users\<you>\.orchestratorpro\config.toml`** with this in it:
 
@@ -77,13 +98,13 @@ matters, because `$env:` variables vanish the moment you close the window.
 ### Part 2 - every time you want work done
 
 ```powershell
-cd C:\code\OrchestratorPro
+cd <YOUR DRIVE LETTER>:\<Your Code FolderName>\OrchestratorPro   # e.g. D:\AiProject\OrchestratorPro
 
 # check the recipe is well-formed (free, instant)
 .\.venv\Scripts\orchestratorpro.exe workflow check workflows\example.yaml
 
 # do the work
-.\.venv\Scripts\orchestratorpro.exe --repo C:\code\your-project run workflows\example.yaml
+.\.venv\Scripts\orchestratorpro.exe --repo <PATH TO THE APP YOU WANT WORKED ON> run workflows\example.yaml
 ```
 
 > **`--repo` goes BEFORE the word `run`.** It is a global option. Putting it
@@ -95,7 +116,7 @@ cd C:\code\OrchestratorPro
 |---|---|
 | `install.ps1` | Once per computer |
 | `config.toml` | Once per computer |
-| `claude /login` | Once, until the session expires |
+| `claude auth` | Once, until the session expires |
 | Writing a recipe file | Once per job |
 | The `run` command | Every time you want work done |
 | Setting `$env:` variables | **Never.** The config file replaced them. |
@@ -172,7 +193,7 @@ extract-tag-service: succeeded
 Review and adopt it yourself:
 
 ```powershell
-cd C:\code\your-project
+cd <PATH TO THE APP YOU WANT WORKED ON>
 git diff main...orchestrator/<run-id>/integration
 git merge --no-ff orchestrator/<run-id>/integration
 ```
@@ -223,7 +244,7 @@ Same pipeline, with a dashboard, live progress, an approval queue, and a REST
 API other systems can drive:
 
 ```powershell
-.\.venv\Scripts\orchestratorpro.exe --repo C:\code\your-project serve
+.\.venv\Scripts\orchestratorpro.exe --repo <PATH TO THE APP YOU WANT WORKED ON> serve
 ```
 
 Dashboard at <http://127.0.0.1:8765/ui/>. The bind is loopback-only and refuses
