@@ -34,7 +34,7 @@ family castle.
 
 ```powershell
 # 1. Get the code
-cd D:\AiProjects
+cd C:\code
 git clone https://github.com/emailmaomao/OrchestratorPro.git
 cd OrchestratorPro
 
@@ -77,13 +77,13 @@ matters, because `$env:` variables vanish the moment you close the window.
 ### Part 2 - every time you want work done
 
 ```powershell
-cd D:\AiProjects\OrchestratorPro
+cd C:\code\OrchestratorPro
 
 # check the recipe is well-formed (free, instant)
 .\.venv\Scripts\orchestratorpro.exe workflow check workflows\example.yaml
 
 # do the work
-.\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\YourProject run workflows\example.yaml
+.\.venv\Scripts\orchestratorpro.exe --repo C:\code\your-project run workflows\example.yaml
 ```
 
 > **`--repo` goes BEFORE the word `run`.** It is a global option. Putting it
@@ -172,7 +172,7 @@ extract-tag-service: succeeded
 Review and adopt it yourself:
 
 ```powershell
-cd D:\AiProjects\YourProject
+cd C:\code\your-project
 git diff main...orchestrator/<run-id>/integration
 git merge --no-ff orchestrator/<run-id>/integration
 ```
@@ -223,7 +223,7 @@ Same pipeline, with a dashboard, live progress, an approval queue, and a REST
 API other systems can drive:
 
 ```powershell
-.\.venv\Scripts\orchestratorpro.exe --repo D:\AiProjects\YourProject serve
+.\.venv\Scripts\orchestratorpro.exe --repo C:\code\your-project serve
 ```
 
 Dashboard at <http://127.0.0.1:8765/ui/>. The bind is loopback-only and refuses
