@@ -31,12 +31,12 @@ You supervise outcomes, not keystrokes.
 > runs have executed this path end to end, several with real code adopted.
 > Without `--repo` the server still runs, in a `fallback` mode that clamps
 > concurrency to 1 and verifies nothing — see
-> [`TECH_DEBT.md`](TECH_DEBT.md) §2 and [`ROADMAP.md`](ROADMAP.md)
+> [`TECH_DEBT.md`](TECH_DEBT.md) and [`ROADMAP.md`](ROADMAP.md)
 > for what is still genuinely open (retention, the mypy baseline, a planner run
 > against a real task).
 
-Milestone history is in [`TASKS.md`](TASKS.md); current state, verified against
-the source, is in [`TECH_DEBT.md`](TECH_DEBT.md).
+Milestone history is in [`TASKS.md`](TASKS.md); known gaps and debt are documented
+in [`TECH_DEBT.md`](TECH_DEBT.md).
 
 ---
 
@@ -117,7 +117,7 @@ Validate it before spending anything — an unknown dependency, a duplicate step
 name, or a cycle is an error here rather than a deadlock later:
 
 ```bash
-orchestratorpro workflow check workflows/extract-tag-service.yaml
+orchestratorpro workflow check workflows/example.yaml
 ```
 
 ### 4. Run it
@@ -125,7 +125,7 @@ orchestratorpro workflow check workflows/extract-tag-service.yaml
 > **`--repo` is a global option, so it goes _before_ the subcommand.**
 
 ```bash
-orchestratorpro --repo /path/to/your-project run workflows/extract-tag-service.yaml
+orchestratorpro --repo /path/to/your-project run workflows/example.yaml
 ```
 
 ```
